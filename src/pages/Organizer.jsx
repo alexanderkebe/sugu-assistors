@@ -154,7 +154,7 @@ function Organizer() {
                                                         <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{assistant.phone}</p>
                                                     </div>
                                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                        <a href={`tel:${assistant.phone}`} className="btn btn-primary" style={{ width: 'auto', padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}>
+                                                        <a href={`tel:${assistant.phone}`} className="btn" style={{ width: 'auto', padding: '0.3rem 0.8rem', fontSize: '0.8rem', backgroundColor: 'var(--success, #10b981)', color: '#fff', border: 'none' }}>
                                                             Call
                                                         </a>
                                                         <button onClick={() => removeAssistant(assistant.id)} style={{ background: 'transparent', border: '1px solid var(--error)', color: 'var(--error)', padding: '0.3rem 0.6rem', borderRadius: 'var(--radius-full)', cursor: 'pointer' }}>
@@ -181,7 +181,7 @@ function Organizer() {
                                                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{assistant.phone}</p>
                                             </div>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <a href={`tel:${assistant.phone}`} className="btn btn-secondary" style={{ width: 'auto', padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}>
+                                                <a href={`tel:${assistant.phone}`} className="btn" style={{ width: 'auto', padding: '0.3rem 0.8rem', fontSize: '0.8rem', backgroundColor: 'var(--success, #10b981)', color: '#fff', border: 'none' }}>
                                                     Call
                                                 </a>
                                                 <button onClick={() => removeAssistant(assistant.id)} style={{ background: 'transparent', border: '1px solid var(--error)', color: 'var(--error)', padding: '0.3rem 0.6rem', borderRadius: 'var(--radius-full)', cursor: 'pointer' }}>
@@ -197,6 +197,47 @@ function Organizer() {
                     </div>
                 ) : (
                     <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginTop: '2rem' }}>Please select or add an event day to view the roster.</p>
+                )}
+            </div>
+
+            {/* All Registrations Directory */}
+            <div className="card" style={{ marginTop: '2rem' }}>
+                <h2 style={{ marginBottom: '1rem' }}>Registered Directory ({assistants.length})</h2>
+                {assistants.length === 0 ? (
+                    <p style={{ color: 'var(--text-secondary)' }}>No one has registered yet.</p>
+                ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid var(--card-border)', color: 'var(--text-secondary)' }}>
+                                    <th style={{ padding: '0.8rem 0.5rem' }}>Name</th>
+                                    <th style={{ padding: '0.8rem 0.5rem' }}>Phone</th>
+                                    <th style={{ padding: '0.8rem 0.5rem' }}>Gender</th>
+                                    <th style={{ padding: '0.8rem 0.5rem' }}>Total Days</th>
+                                    <th style={{ padding: '0.8rem 0.5rem' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {assistants.map(a => (
+                                    <tr key={a.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '0.8rem 0.5rem', fontWeight: '500' }}>{a.name}</td>
+                                        <td style={{ padding: '0.8rem 0.5rem', color: 'var(--text-secondary)' }}>{a.phone}</td>
+                                        <td style={{ padding: '0.8rem 0.5rem' }}>{a.gender}</td>
+                                        <td style={{ padding: '0.8rem 0.5rem' }}>
+                                            <span style={{ background: 'rgba(255,255,255,0.1)', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.85rem' }}>
+                                                {a.availableDays ? a.availableDays.length : 0}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '0.8rem 0.5rem' }}>
+                                            <button onClick={() => removeAssistant(a.id)} style={{ background: 'transparent', border: '1px solid var(--error)', color: 'var(--error)', padding: '0.2rem 0.5rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </div>

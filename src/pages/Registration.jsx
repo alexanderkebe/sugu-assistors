@@ -4,7 +4,7 @@ import { useAppContext } from '../context/AppContext';
 import { displayDate } from '../utils/dateFormatter';
 
 function Registration() {
-    const { eventDays, addAssistant } = useAppContext();
+    const { eventDays, assistants, addAssistant } = useAppContext();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -16,7 +16,14 @@ function Registration() {
 
     const [success, setSuccess] = useState(false);
 
+    const isDayFull = (day) => {
+        const dayAssistants = assistants.filter(a => a.availableDays && a.availableDays.includes(day) && a.gender === formData.gender);
+        const max = formData.gender === 'Female' ? 9 : 3;
+        return dayAssistants.length >= max;
+    };
+
     const handleDayToggle = (day) => {
+        if (isDayFull(day) && !formData.availableDays.includes(day)) return;
         setFormData(prev => {
             const days = [...prev.availableDays];
             if (days.includes(day)) {
@@ -93,7 +100,7 @@ function Registration() {
                         <label>Gender *</label>
                         <select
                             value={formData.gender}
-                            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, gender: e.target.value, availableDays: [] })}
                         >
                             <option value="Female">Female</option>
                             <option value="Male">Male</option>
@@ -109,26 +116,33 @@ function Registration() {
                             {eventDays.length === 0 ? (
                                 <p style={{ color: 'var(--error)', fontSize: '0.9rem' }}>No event days have been set by the organizer.</p>
                             ) : (
-                                eventDays.map(day => (
-                                    <button
-                                        type="button"
-                                        key={day}
-                                        onClick={() => handleDayToggle(day)}
-                                        style={{
-                                            background: formData.availableDays.includes(day) ? 'var(--primary-accent)' : 'rgba(255,255,255,0.1)',
-                                            color: formData.availableDays.includes(day) ? 'var(--primary-bg)' : 'var(--text-primary)',
-                                            border: formData.availableDays.includes(day) ? 'none' : '1px solid var(--card-border)',
-                                            padding: '0.5rem 1rem',
-                                            borderRadius: 'var(--radius-full)',
-                                            cursor: 'pointer',
-                                            fontWeight: formData.availableDays.includes(day) ? '600' : '400',
-                                            transition: 'all 0.2s',
-                                            fontFamily: 'var(--font-body)'
-                                        }}
-                                    >
-                                        {displayDate(day)}
-                                    </button>
-                                ))
+                                eventDays.map(day => {
+                                    const full = isDayFull(day);
+                                    const selected = formData.availableDays.includes(day);
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={day}
+                                            onClick={() => handleDayToggle(day)}
+                                            disabled={full && !selected}
+                                            style={{
+                                                background: selected ? 'var(--primary-accent)' : full ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.1)',
+                                                color: selected ? 'var(--primary-bg)' : full ? 'var(--text-secondary)' : 'var(--text-primary)',
+                                                border: selected ? 'none' : '1px solid var(--card-border)',
+                                                padding: '0.5rem 1rem',
+                                                borderRadius: 'var(--radius-full)',
+                                                cursor: full && !selected ? 'not-allowed' : 'pointer',
+                                                fontWeight: selected ? '600' : '400',
+                                                opacity: full && !selected ? 0.5 : 1,
+                                                transition: 'all 0.2s',
+                                                fontFamily: 'var(--font-body)',
+                                                textDecoration: full && !selected ? 'line-through' : 'none'
+                                            }}
+                                        >
+                                            {displayDate(day)} {full && !selected ? '(Full)' : ''}
+                                        </button>
+                                    );
+                                })
                             )}
                         </div>
                     </div>
