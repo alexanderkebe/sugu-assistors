@@ -69,13 +69,22 @@ export default function ExportView({ day, assignments, onClose }) {
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
                     <h1 style={{
                         color: '#C9A23A',
+                        fontSize: '3rem',
+                        margin: '0 0 0.5rem 0',
+                        letterSpacing: '3px',
+                        textTransform: 'uppercase'
+                    }}>
+                        ሱባኤ ጉባኤ
+                    </h1>
+                    <h2 style={{
+                        color: '#C9A23A',
                         fontSize: '2.5rem',
                         margin: '0 0 0.5rem 0',
                         letterSpacing: '2px',
                         background: 'none'
                     }}>
                         {displayDate(day)}
-                    </h1>
+                    </h2>
                     <div style={{
                         width: '60px',
                         height: '2px',
