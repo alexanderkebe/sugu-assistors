@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { getAssignmentsForDay, ROLES } from '../utils/assignment';
@@ -7,11 +7,18 @@ import DatePicker from "react-multi-date-picker";
 import { displayDate } from '../utils/dateFormatter';
 
 function Organizer() {
-    const { eventDays, setEventDays, assistants, addEventDay, removeEventDay, removeAssistant } = useAppContext();
+    const { eventDays, setEventDays, assistants, addEventDay, removeEventDay, removeAssistant, loading } = useAppContext();
     const navigate = useNavigate();
 
-    const [selectedDay, setSelectedDay] = useState(eventDays[0] || '');
+    const [selectedDay, setSelectedDay] = useState('');
     const [showExport, setShowExport] = useState(false);
+
+    // Auto-select first day when eventDays loads from database
+    useEffect(() => {
+        if (eventDays.length > 0 && !selectedDay) {
+            setSelectedDay(eventDays[0]);
+        }
+    }, [eventDays]);
 
     const handleDateChange = (dates) => {
         if (!dates) {
